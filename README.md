@@ -13,19 +13,29 @@
 
 # 아키텍처 & 시나리오 소개
 
+## 아키텍처
+
+![Architecture](docs/images/archi.png)
+
+## 시나리오
+
 - TBD
 
 # Azure 기본 개념 소개
+
+## Application Gateway
+
+- TBD
+
+## Azure Kubernetes Service(AKS)
+
+- TBD
 
 ## Azure OpenAI
 
 - TBD
 
-## Cosmos DB
-
-- TBD
-
-## Azure Kubernetes Service
+## Storage Account & Blob storage
 
 - TBD
 
