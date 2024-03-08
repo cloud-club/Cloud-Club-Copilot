@@ -33,10 +33,3 @@ variable "partition_count" {
         error_message = "The partition_count must be one of the following values: 1, 2, 3, 4, 6, 12."
     }
 }
-
-variable "aoai-name" {
-    description = "The name of the Azure OpenAI instance."
-    type        = string
-    default     = "cloudclub-aoai"
-}
-
