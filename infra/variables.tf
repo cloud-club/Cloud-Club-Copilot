@@ -17,16 +17,16 @@ variable "log_analytics_retention_days" {
   default     = 30
 }
 
-variable "solution_plan_map" {
-  description = "Specifies solutions to deploy to log analytics workspace"
-  default     = {
-    ContainerInsights= {
-      product   = "OMSGallery/ContainerInsights"
-      publisher = "Microsoft"
-    }
-  }
-  type = map(any)
-}
+# variable "solution_plan_map" {
+#   description = "Specifies solutions to deploy to log analytics workspace"
+#   default     = {
+#     ContainerInsights= {
+#       product   = "OMSGallery/ContainerInsights"
+#       publisher = "Microsoft"
+#     }
+#   }
+#   type = map(any)
+# }
 
 variable "location" {
   description = "Specifies the location for the resource group and all the resources"
@@ -100,11 +100,11 @@ variable "vm_subnet_address_prefix" {
   type        = list(string)
 }
 
-variable "bastion_subnet_address_prefix" {
-  description = "Specifies the address prefix of the firewall subnet"
-  default     = ["10.243.2.0/24"]
-  type        = list(string)
-}
+# variable "bastion_subnet_address_prefix" {
+#   description = "Specifies the address prefix of the firewall subnet"
+#   default     = ["10.243.2.0/24"]
+#   type        = list(string)
+# }
 
 variable "aks_cluster_name" {
   description = "(Required) Specifies the name of the AKS cluster."
@@ -160,7 +160,7 @@ variable "sku_tier" {
 
 variable "kubernetes_version" {
   description = "Specifies the AKS Kubernetes version"
-  default     = "1.26.3"
+  default     = "1.27.7"
   type        = string
 }
 
@@ -558,10 +558,10 @@ variable "admin_username" {
   default     = "azadmin"
 }
 
-variable "ssh_public_key" {
-  description = "(Required) Specifies the SSH public key for the jumpbox virtual machine and AKS worker nodes."
-  type        = string
-}
+# variable "ssh_public_key" {
+#   description = "(Required) Specifies the SSH public key for the jumpbox virtual machine and AKS worker nodes."
+#   type        = string
+# }
 
 variable "keda_enabled" {
   description = "(Optional) Specifies whether KEDA Autoscaler can be used for workloads."
@@ -712,32 +712,32 @@ variable "service_account_name" {
   default = "magic8ball-sa"
 }
 
-variable "email" {
-  description = "Specifies the email address for the cert-manager cluster issuer."
-  type = string
-  default = "paolos@microsoft.com"
-}
+# variable "email" {
+#   description = "Specifies the email address for the cert-manager cluster issuer."
+#   type = string
+#   default = "paolos@microsoft.com"
+# }
 
-variable "deployment_script_name" {
-  description = "(Required) Specifies the name of the Azure OpenAI Service"
-  type = string
-  default = "BashScript"
-}
+# variable "deployment_script_name" {
+#   description = "(Required) Specifies the name of the Azure OpenAI Service"
+#   type = string
+#   default = "BashScript"
+# }
 
-variable "deployment_script_azure_cli_version" {
-  description = "(Required) Azure CLI module version to be used."
-  type = string
-  default = "2.9.1"
-}
+# variable "deployment_script_azure_cli_version" {
+#   description = "(Required) Azure CLI module version to be used."
+#   type = string
+#   default = "2.9.1"
+# }
 
-variable "deployment_script_managed_identity_name" {
-  description = "Specifies the name of the user-defined managed identity used by the deployment script."
-  type = string
-  default = "ScriptManagedIdentity"
-}
+# variable "deployment_script_managed_identity_name" {
+#   description = "Specifies the name of the user-defined managed identity used by the deployment script."
+#   type = string
+#   default = "ScriptManagedIdentity"
+# }
 
-variable "deployment_script_primary_script_uri" {
-  description = "(Optional) Uri for the script. This is the entry point for the external script. Changing this forces a new Resource Deployment Script to be created."
-  type = string
-  default = "https://paolosalvatori.blob.core.windows.net/scripts/install-nginx-via-helm-and-create-sa.sh"
-}
+# variable "deployment_script_primary_script_uri" {
+#   description = "(Optional) Uri for the script. This is the entry point for the external script. Changing this forces a new Resource Deployment Script to be created."
+#   type = string
+#   default = "https://paolosalvatori.blob.core.windows.net/scripts/install-nginx-via-helm-and-create-sa.sh"
+# }

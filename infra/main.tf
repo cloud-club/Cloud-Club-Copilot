@@ -1,16 +1,3 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "3.58"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
 locals {
   storage_account_prefix = "boot"
 }
@@ -80,34 +67,34 @@ module "virtual_network" {
       private_link_service_network_policies_enabled : false
       delegation: "Microsoft.ContainerService/managedClusters"
     },
-    {
-      name : var.vm_subnet_name
-      address_prefixes : var.vm_subnet_address_prefix
-      private_endpoint_network_policies_enabled : true
-      private_link_service_network_policies_enabled : false
-      delegation: null
-    },
-    {
-      name : "AzureBastionSubnet"
-      address_prefixes : var.bastion_subnet_address_prefix
-      private_endpoint_network_policies_enabled : true
-      private_link_service_network_policies_enabled : false
-      delegation: null
-    }
+    # {
+    #   name : var.vm_subnet_name
+    #   address_prefixes : var.vm_subnet_address_prefix
+    #   private_endpoint_network_policies_enabled : true
+    #   private_link_service_network_policies_enabled : false
+    #   delegation: null
+    # },
+    # {
+    #   name : "AzureBastionSubnet"
+    #   address_prefixes : var.bastion_subnet_address_prefix
+    #   private_endpoint_network_policies_enabled : true
+    #   private_link_service_network_policies_enabled : false
+    #   delegation: null
+    # }
   ]
 }
 
-module "nat_gateway" {
-  source                       = "./modules/nat_gateway"
-  name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.nat_gateway_name}" : "${var.name_prefix}${var.nat_gateway_name}"
-  resource_group_name          = azurerm_resource_group.rg.name
-  location                     = var.location
-  sku_name                     = var.nat_gateway_sku_name
-  idle_timeout_in_minutes      = var.nat_gateway_idle_timeout_in_minutes
-  zones                        = var.nat_gateway_zones
-  tags                         = var.tags
-  subnet_ids                   = module.virtual_network.subnet_ids
-}
+# module "nat_gateway" {
+#   source                       = "./modules/nat_gateway"
+#   name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.nat_gateway_name}" : "${var.name_prefix}${var.nat_gateway_name}"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   location                     = var.location
+#   sku_name                     = var.nat_gateway_sku_name
+#   idle_timeout_in_minutes      = var.nat_gateway_idle_timeout_in_minutes
+#   zones                        = var.nat_gateway_zones
+#   tags                         = var.tags
+#   subnet_ids                   = module.virtual_network.subnet_ids
+# }
 
 module "container_registry" {
   source                       = "./modules/container_registry"
@@ -270,109 +257,109 @@ module "storage_account" {
 
 }
 
-module "bastion_host" {
-  source                       = "./modules/bastion_host"
-  name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.bastion_host_name}" : "${var.name_prefix}${var.bastion_host_name}"
-  location                     = var.location
-  resource_group_name          = azurerm_resource_group.rg.name
-  subnet_id                    = module.virtual_network.subnet_ids["AzureBastionSubnet"]
-  log_analytics_workspace_id   = module.log_analytics_workspace.id
-  log_analytics_retention_days = var.log_analytics_retention_days
-  tags                         = var.tags
-}
+# module "bastion_host" {
+#   source                       = "./modules/bastion_host"
+#   name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.bastion_host_name}" : "${var.name_prefix}${var.bastion_host_name}"
+#   location                     = var.location
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   subnet_id                    = module.virtual_network.subnet_ids["AzureBastionSubnet"]
+#   log_analytics_workspace_id   = module.log_analytics_workspace.id
+#   log_analytics_retention_days = var.log_analytics_retention_days
+#   tags                         = var.tags
+# }
 
-module "virtual_machine" {
-  count                               = var.vm_enabled ? 1 : 0
-  source                              = "./modules/virtual_machine"
-  name                                = var.name_prefix == null ? "${random_string.prefix.result}${var.vm_name}" : "${var.name_prefix}${var.vm_name}"
-  size                                = var.vm_size
-  location                            = var.location
-  public_ip                           = var.vm_public_ip
-  vm_user                             = var.admin_username
-  admin_ssh_public_key                = var.ssh_public_key
-  os_disk_image                       = var.vm_os_disk_image
-  resource_group_name                 = azurerm_resource_group.rg.name
-  subnet_id                           = module.virtual_network.subnet_ids[var.vm_subnet_name]
-  os_disk_storage_account_type        = var.vm_os_disk_storage_account_type
-  boot_diagnostics_storage_account    = module.storage_account.primary_blob_endpoint
-  log_analytics_workspace_id          = module.log_analytics_workspace.workspace_id
-  log_analytics_workspace_key         = module.log_analytics_workspace.primary_shared_key
-  log_analytics_workspace_resource_id = module.log_analytics_workspace.id
-  log_analytics_retention_days        = var.log_analytics_retention_days
-  tags                                = var.tags
-}
+# module "virtual_machine" {
+#   count                               = var.vm_enabled ? 1 : 0
+#   source                              = "./modules/virtual_machine"
+#   name                                = var.name_prefix == null ? "${random_string.prefix.result}${var.vm_name}" : "${var.name_prefix}${var.vm_name}"
+#   size                                = var.vm_size
+#   location                            = var.location
+#   public_ip                           = var.vm_public_ip
+#   vm_user                             = var.admin_username
+#   admin_ssh_public_key                = var.ssh_public_key
+#   os_disk_image                       = var.vm_os_disk_image
+#   resource_group_name                 = azurerm_resource_group.rg.name
+#   subnet_id                           = module.virtual_network.subnet_ids[var.vm_subnet_name]
+#   os_disk_storage_account_type        = var.vm_os_disk_storage_account_type
+#   boot_diagnostics_storage_account    = module.storage_account.primary_blob_endpoint
+#   log_analytics_workspace_id          = module.log_analytics_workspace.workspace_id
+#   log_analytics_workspace_key         = module.log_analytics_workspace.primary_shared_key
+#   log_analytics_workspace_resource_id = module.log_analytics_workspace.id
+#   log_analytics_retention_days        = var.log_analytics_retention_days
+#   tags                                = var.tags
+# }
 
-module "key_vault" {
-  source                          = "./modules/key_vault"
-  name                            = var.name_prefix == null ? "${random_string.prefix.result}${var.key_vault_name}" : "${var.name_prefix}${var.key_vault_name}"
-  location                        = var.location
-  resource_group_name             = azurerm_resource_group.rg.name
-  tenant_id                       = data.azurerm_client_config.current.tenant_id
-  sku_name                        = var.key_vault_sku_name
-  enabled_for_deployment          = var.key_vault_enabled_for_deployment
-  enabled_for_disk_encryption     = var.key_vault_enabled_for_disk_encryption
-  enabled_for_template_deployment = var.key_vault_enabled_for_template_deployment
-  enable_rbac_authorization       = var.key_vault_enable_rbac_authorization
-  purge_protection_enabled        = var.key_vault_purge_protection_enabled
-  soft_delete_retention_days      = var.key_vault_soft_delete_retention_days
-  bypass                          = var.key_vault_bypass
-  default_action                  = var.key_vault_default_action
-  log_analytics_workspace_id      = module.log_analytics_workspace.id
-  log_analytics_retention_days    = var.log_analytics_retention_days
-  tags                            = var.tags
-}
+# module "key_vault" {
+#   source                          = "./modules/key_vault"
+#   name                            = var.name_prefix == null ? "${random_string.prefix.result}${var.key_vault_name}" : "${var.name_prefix}${var.key_vault_name}"
+#   location                        = var.location
+#   resource_group_name             = azurerm_resource_group.rg.name
+#   tenant_id                       = data.azurerm_client_config.current.tenant_id
+#   sku_name                        = var.key_vault_sku_name
+#   enabled_for_deployment          = var.key_vault_enabled_for_deployment
+#   enabled_for_disk_encryption     = var.key_vault_enabled_for_disk_encryption
+#   enabled_for_template_deployment = var.key_vault_enabled_for_template_deployment
+#   enable_rbac_authorization       = var.key_vault_enable_rbac_authorization
+#   purge_protection_enabled        = var.key_vault_purge_protection_enabled
+#   soft_delete_retention_days      = var.key_vault_soft_delete_retention_days
+#   bypass                          = var.key_vault_bypass
+#   default_action                  = var.key_vault_default_action
+#   log_analytics_workspace_id      = module.log_analytics_workspace.id
+#   log_analytics_retention_days    = var.log_analytics_retention_days
+#   tags                            = var.tags
+# }
 
-module "acr_private_dns_zone" {
-  source                       = "./modules/private_dns_zone"
-  name                         = "privatelink.azurecr.io"
-  resource_group_name          = azurerm_resource_group.rg.name
-  tags                         = var.tags
-  virtual_networks_to_link     = {
-    (module.virtual_network.name) = {
-      subscription_id = data.azurerm_client_config.current.subscription_id
-      resource_group_name = azurerm_resource_group.rg.name
-    }
-  }
-}
+# module "acr_private_dns_zone" {
+#   source                       = "./modules/private_dns_zone"
+#   name                         = "privatelink.azurecr.io"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   tags                         = var.tags
+#   virtual_networks_to_link     = {
+#     (module.virtual_network.name) = {
+#       subscription_id = data.azurerm_client_config.current.subscription_id
+#       resource_group_name = azurerm_resource_group.rg.name
+#     }
+#   }
+# }
 
-module "openai_private_dns_zone" {
-  source                       = "./modules/private_dns_zone"
-  name                         = "privatelink.openai.azure.com"
-  resource_group_name          = azurerm_resource_group.rg.name
-  tags                         = var.tags
-  virtual_networks_to_link     = {
-    (module.virtual_network.name) = {
-      subscription_id = data.azurerm_client_config.current.subscription_id
-      resource_group_name = azurerm_resource_group.rg.name
-    }
-  }
-}
+# module "openai_private_dns_zone" {
+#   source                       = "./modules/private_dns_zone"
+#   name                         = "privatelink.openai.azure.com"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   tags                         = var.tags
+#   virtual_networks_to_link     = {
+#     (module.virtual_network.name) = {
+#       subscription_id = data.azurerm_client_config.current.subscription_id
+#       resource_group_name = azurerm_resource_group.rg.name
+#     }
+#   }
+# }
 
-module "key_vault_private_dns_zone" {
-  source                       = "./modules/private_dns_zone"
-  name                         = "privatelink.vaultcore.azure.net"
-  resource_group_name          = azurerm_resource_group.rg.name
-  tags                         = var.tags
-  virtual_networks_to_link     = {
-    (module.virtual_network.name) = {
-      subscription_id = data.azurerm_client_config.current.subscription_id
-      resource_group_name = azurerm_resource_group.rg.name
-    }
-  }
-}
+# module "key_vault_private_dns_zone" {
+#   source                       = "./modules/private_dns_zone"
+#   name                         = "privatelink.vaultcore.azure.net"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   tags                         = var.tags
+#   virtual_networks_to_link     = {
+#     (module.virtual_network.name) = {
+#       subscription_id = data.azurerm_client_config.current.subscription_id
+#       resource_group_name = azurerm_resource_group.rg.name
+#     }
+#   }
+# }
 
-module "blob_private_dns_zone" {
-  source                       = "./modules/private_dns_zone"
-  name                         = "privatelink.blob.core.windows.net"
-  resource_group_name          = azurerm_resource_group.rg.name
-  tags                         = var.tags
-  virtual_networks_to_link     = {
-    (module.virtual_network.name) = {
-      subscription_id = data.azurerm_client_config.current.subscription_id
-      resource_group_name = azurerm_resource_group.rg.name
-    }
-  }
-}
+# module "blob_private_dns_zone" {
+#   source                       = "./modules/private_dns_zone"
+#   name                         = "privatelink.blob.core.windows.net"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   tags                         = var.tags
+#   virtual_networks_to_link     = {
+#     (module.virtual_network.name) = {
+#       subscription_id = data.azurerm_client_config.current.subscription_id
+#       resource_group_name = azurerm_resource_group.rg.name
+#     }
+#   }
+# }
 
 module "openai_private_endpoint" {
   source                         = "./modules/private_endpoint"
@@ -402,53 +389,53 @@ module "acr_private_endpoint" {
   private_dns_zone_group_ids     = [module.acr_private_dns_zone.id]
 }
 
-module "key_vault_private_endpoint" {
-  source                         = "./modules/private_endpoint"
-  name                           = "${module.key_vault.name}PrivateEndpoint"
-  location                       = var.location
-  resource_group_name            = azurerm_resource_group.rg.name
-  subnet_id                      = module.virtual_network.subnet_ids[var.vm_subnet_name]
-  tags                           = var.tags
-  private_connection_resource_id = module.key_vault.id
-  is_manual_connection           = false
-  subresource_name               = "vault"
-  private_dns_zone_group_name    = "KeyVaultPrivateDnsZoneGroup"
-  private_dns_zone_group_ids     = [module.key_vault_private_dns_zone.id]
-}
+# module "key_vault_private_endpoint" {
+#   source                         = "./modules/private_endpoint"
+#   name                           = "${module.key_vault.name}PrivateEndpoint"
+#   location                       = var.location
+#   resource_group_name            = azurerm_resource_group.rg.name
+#   subnet_id                      = module.virtual_network.subnet_ids[var.vm_subnet_name]
+#   tags                           = var.tags
+#   private_connection_resource_id = module.key_vault.id
+#   is_manual_connection           = false
+#   subresource_name               = "vault"
+#   private_dns_zone_group_name    = "KeyVaultPrivateDnsZoneGroup"
+#   private_dns_zone_group_ids     = [module.key_vault_private_dns_zone.id]
+# }
 
-module "blob_private_endpoint" {
-  source                         = "./modules/private_endpoint"
-  name                           = var.name_prefix == null ? "${random_string.prefix.result}BlocStoragePrivateEndpoint" : "${var.name_prefix}BlobStoragePrivateEndpoint"
-  location                       = var.location
-  resource_group_name            = azurerm_resource_group.rg.name
-  subnet_id                      = module.virtual_network.subnet_ids[var.vm_subnet_name]
-  tags                           = var.tags
-  private_connection_resource_id = module.storage_account.id
-  is_manual_connection           = false
-  subresource_name               = "blob"
-  private_dns_zone_group_name    = "BlobPrivateDnsZoneGroup"
-  private_dns_zone_group_ids     = [module.blob_private_dns_zone.id]
-}
+# module "blob_private_endpoint" {
+#   source                         = "./modules/private_endpoint"
+#   name                           = var.name_prefix == null ? "${random_string.prefix.result}BlocStoragePrivateEndpoint" : "${var.name_prefix}BlobStoragePrivateEndpoint"
+#   location                       = var.location
+#   resource_group_name            = azurerm_resource_group.rg.name
+#   subnet_id                      = module.virtual_network.subnet_ids[var.vm_subnet_name]
+#   tags                           = var.tags
+#   private_connection_resource_id = module.storage_account.id
+#   is_manual_connection           = false
+#   subresource_name               = "blob"
+#   private_dns_zone_group_name    = "BlobPrivateDnsZoneGroup"
+#   private_dns_zone_group_ids     = [module.blob_private_dns_zone.id]
+# }
 
-module "deployment_script" {
-  source                              = "./modules/deployment_script"
-  name                                = var.name_prefix == null ? "${random_string.prefix.result}${var.deployment_script_name}" : "${var.name_prefix}${var.deployment_script_name}"
-  location                            = var.location
-  resource_group_name                 = azurerm_resource_group.rg.name
-  azure_cli_version                   = var.deployment_script_azure_cli_version
-  managed_identity_name               = var.name_prefix == null ? "${random_string.prefix.result}${var.deployment_script_managed_identity_name}" : "${var.name_prefix}${var.deployment_script_managed_identity_name}"
-  aks_cluster_name                    = module.aks_cluster.name
-  hostname                            = "${var.subdomain}.${var.domain}"
-  namespace                           = var.namespace
-  service_account_name                = var.service_account_name
-  email                               = var.email
-  primary_script_uri                  = var.deployment_script_primary_script_uri
-  tenant_id                           = data.azurerm_client_config.current.tenant_id
-  subscription_id                     = data.azurerm_client_config.current.subscription_id
-  workload_managed_identity_client_id = azurerm_user_assigned_identity.aks_workload_identity.client_id
-  tags                                = var.tags
+# module "deployment_script" {
+#   source                              = "./modules/deployment_script"
+#   name                                = var.name_prefix == null ? "${random_string.prefix.result}${var.deployment_script_name}" : "${var.name_prefix}${var.deployment_script_name}"
+#   location                            = var.location
+#   resource_group_name                 = azurerm_resource_group.rg.name
+#   azure_cli_version                   = var.deployment_script_azure_cli_version
+#   managed_identity_name               = var.name_prefix == null ? "${random_string.prefix.result}${var.deployment_script_managed_identity_name}" : "${var.name_prefix}${var.deployment_script_managed_identity_name}"
+#   aks_cluster_name                    = module.aks_cluster.name
+#   hostname                            = "${var.subdomain}.${var.domain}"
+#   namespace                           = var.namespace
+#   service_account_name                = var.service_account_name
+#   email                               = var.email
+#   primary_script_uri                  = var.deployment_script_primary_script_uri
+#   tenant_id                           = data.azurerm_client_config.current.tenant_id
+#   subscription_id                     = data.azurerm_client_config.current.subscription_id
+#   workload_managed_identity_client_id = azurerm_user_assigned_identity.aks_workload_identity.client_id
+#   tags                                = var.tags
 
-  depends_on = [ 
-    module.aks_cluster
-   ]
-}
+#   depends_on = [ 
+#     module.aks_cluster
+#    ]
+# }

@@ -14,5 +14,6 @@ build/
 *.tfstate.backup
 *.tfvars
 *.tfplan
+.terraform.lock.hcl
 
 venv/
