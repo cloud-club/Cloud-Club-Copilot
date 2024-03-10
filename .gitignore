@@ -15,5 +15,6 @@ build/
 *.tfvars
 *.tfplan
 .terraform.lock.hcl
+.terraform.tfstate.lock.info
 
 venv/

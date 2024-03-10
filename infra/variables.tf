@@ -1,7 +1,7 @@
 variable "name_prefix" {
   description = "(Optional) A prefix for the name of all the resource groups and resources."
   type        = string
-  default     = "Bingo"
+  default     = "CloudClub"
   nullable    = true
 }
 
@@ -30,13 +30,13 @@ variable "solution_plan_map" {
 
 variable "location" {
   description = "Specifies the location for the resource group and all the resources"
-  default     = "northeurope"
+  default     = "eastus"
   type        = string
 }
 
 variable "resource_group_name" {
   description = "Specifies the resource group name"
-  default     = "RG"
+  default     = "rg"
   type        = string
 }
 
@@ -88,23 +88,29 @@ variable "pod_subnet_address_prefix" {
   type        = list(string)
 }
 
-variable "vm_subnet_name" {
-  description = "Specifies the name of the jumpbox subnet"
-  default     = "VmSubnet"
+# variable "vm_subnet_name" {
+#   description = "Specifies the name of the jumpbox subnet"
+#   default     = "VmSubnet"
+#   type        = string
+# }
+
+# variable "vm_subnet_address_prefix" {
+#   description = "Specifies the address prefix of the jumbox subnet"
+#   default     = ["10.243.1.0/24"]
+#   type        = list(string)
+# }
+
+variable "private_endpoint_subnet_name" {
+  description = "Specifies the name of the firewall subnet"
+  default     = "private-endpoint-subnet"
   type        = string
 }
 
-variable "vm_subnet_address_prefix" {
-  description = "Specifies the address prefix of the jumbox subnet"
-  default     = ["10.243.1.0/24"]
+variable "private_endpoint_subnet_address_prefix" {
+  description = "Specifies the address prefix of the firewall subnet"
+  default     = ["10.243.2.0/24"]
   type        = list(string)
 }
-
-# variable "bastion_subnet_address_prefix" {
-#   description = "Specifies the address prefix of the firewall subnet"
-#   default     = ["10.243.2.0/24"]
-#   type        = list(string)
-# }
 
 variable "aks_cluster_name" {
   description = "(Required) Specifies the name of the AKS cluster."
@@ -558,10 +564,10 @@ variable "admin_username" {
   default     = "azadmin"
 }
 
-variable "ssh_public_key" {
-  description = "(Required) Specifies the SSH public key for the jumpbox virtual machine and AKS worker nodes."
-  type        = string
-}
+# variable "ssh_public_key" {
+#   description = "(Required) Specifies the SSH public key for the jumpbox virtual machine and AKS worker nodes."
+#   type        = string
+# }
 
 variable "keda_enabled" {
   description = "(Optional) Specifies whether KEDA Autoscaler can be used for workloads."
@@ -778,6 +784,76 @@ variable "frontend_port_name" {
     default = "appgw-frontend-port"
 }
 
-variable "" {
+variable "http_listener_name" {
+    description = "Specifies the name of the HTTP listener."
+    type = string
+    default = "appgw-http-listener"
+}
+
+variable "backend_http_settings_name" {
+    description = "Specifies the name of the backend HTTP settings."
+    type = string
+    default = "appgw-backend-http-settings"
+}
+
+variable "request_routing_rule_name" {
+    description = "Specifies the name of the request routing rule."
+    type = string
+    default = "appgw-request-routing-rule"
   
+}
+
+variable "appgw_subnet_name" {
+    description = "Specifies the name of the subnet that hosts the Application Gateway."
+    type = string
+    default = "appgw-subnet"
+}
+
+variable "appgw_subnet_address_prefix" {
+    description = "Specifies the address prefix of the subnet that hosts the Application Gateway."
+    type = list(string)
+    default = ["10.243.1.0/24"]
+}
+
+variable "appgw_frontend_port" {
+    description = "Specifies the frontend port of the Application Gateway."
+    type = number
+    default = 80
+}
+
+variable "appgw_backend_port" {
+    description = "Specifies the backend port of the Application Gateway."
+    type = number
+    default = 80
+}
+
+
+variable "appgw_backend_protocol" {
+    description = "Specifies the backend protocol of the Application Gateway."
+    type = string
+    default = "Http"
+}
+
+variable "http_listener_protocol" {
+    description = "Specifies the protocol of the HTTP listener."
+    type = string
+    default = "Http"
+}
+
+variable "request_routing_rule_priority" {
+    description = "Specifies the priority of the request routing rule."
+    type = number
+    default = 9
+}
+
+variable "request_routing_rule_type" {
+    description = "Specifies the type of the request routing rule."
+    type = string
+    default = "Basic"
+}
+
+variable "gateway_ip_configuration_name" {
+    description = "Specifies the name of the gateway IP configuration."
+    type = string
+    default = "appgw-gateway-ip-config"
 }

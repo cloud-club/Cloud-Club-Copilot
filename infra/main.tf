@@ -67,6 +67,21 @@ module "virtual_network" {
       private_link_service_network_policies_enabled : false
       delegation: "Microsoft.ContainerService/managedClusters"
     },
+    {
+      name : var.appgw_subnet_name
+      address_prefixes : var.appgw_subnet_address_prefix
+      private_endpoint_network_policies_enabled : false
+      private_link_service_network_policies_enabled : false
+      delegation: null
+    }, 
+    {
+      name: var.private_endpoint_subnet_name
+      address_prefixes: var.private_endpoint_subnet_address_prefix
+      private_endpoint_network_policies_enabled: true
+      private_link_service_network_policies_enabled: false
+      delegation: null
+      
+    }
     # {
     #   name : var.vm_subnet_name
     #   address_prefixes : var.vm_subnet_address_prefix
@@ -147,7 +162,7 @@ module "aks_cluster" {
   admin_group_object_ids                  = var.admin_group_object_ids
   azure_rbac_enabled                      = var.azure_rbac_enabled
   admin_username                          = var.admin_username
-  ssh_public_key                          = var.ssh_public_key
+  ssh_public_key                          = ""
   keda_enabled                            = var.keda_enabled
   vertical_pod_autoscaler_enabled         = var.vertical_pod_autoscaler_enabled
   workload_identity_enabled               = var.workload_identity_enabled
@@ -157,12 +172,18 @@ module "aks_cluster" {
   azure_policy_enabled                    = var.azure_policy_enabled
   http_application_routing_enabled        = var.http_application_routing_enabled
 
-  ingress_application_gateway = module.application-gateway.id
+  ingress_application_gateway = {
+    gateway_id = azurerm_application_gateway.application-gateway.id
+    subnet_id = module.virtual_network.subnet_ids[var.appgw_subnet_name]
+    gateway_name = var.appgw-name
+    subnet_cidr = var.appgw_subnet_address_prefix[0]
+    enabled = true
+  }
 
   depends_on = [
     # module.nat_gateway,
     module.container_registry,
-    module.application-gateway
+    azurerm_application_gateway.application-gateway
   ]
 }
 
@@ -312,18 +333,18 @@ module "storage_account" {
 #   tags                            = var.tags
 # }
 
-# module "acr_private_dns_zone" {
-#   source                       = "./modules/private_dns_zone"
-#   name                         = "privatelink.azurecr.io"
-#   resource_group_name          = azurerm_resource_group.rg.name
-#   tags                         = var.tags
-#   virtual_networks_to_link     = {
-#     (module.virtual_network.name) = {
-#       subscription_id = data.azurerm_client_config.current.subscription_id
-#       resource_group_name = azurerm_resource_group.rg.name
-#     }
-#   }
-# }
+module "acr_private_dns_zone" {
+  source                       = "./modules/private_dns_zone"
+  name                         = "privatelink.azurecr.io"
+  resource_group_name          = azurerm_resource_group.rg.name
+  tags                         = var.tags
+  virtual_networks_to_link     = {
+    (module.virtual_network.name) = {
+      subscription_id = data.azurerm_client_config.current.subscription_id
+      resource_group_name = azurerm_resource_group.rg.name
+    }
+  }
+}
 
 module "openai_private_dns_zone" {
   source                       = "./modules/private_dns_zone"
@@ -369,7 +390,7 @@ module "openai_private_endpoint" {
   name                           = "${module.openai.name}PrivateEndpoint"
   location                       = var.location
   resource_group_name            = azurerm_resource_group.rg.name
-  subnet_id                      = module.virtual_network.subnet_ids[var.vm_subnet_name]
+  subnet_id                      = module.virtual_network.subnet_ids[var.private_endpoint_subnet_name]
   tags                           = var.tags
   private_connection_resource_id = module.openai.id
   is_manual_connection           = false
@@ -383,7 +404,7 @@ module "acr_private_endpoint" {
   name                           = "${module.container_registry.name}PrivateEndpoint"
   location                       = var.location
   resource_group_name            = azurerm_resource_group.rg.name
-  subnet_id                      = module.virtual_network.subnet_ids[var.vm_subnet_name]
+  subnet_id                      = module.virtual_network.subnet_ids[var.private_endpoint_subnet_name]
   tags                           = var.tags
   private_connection_resource_id = module.container_registry.id
   is_manual_connection           = false
@@ -443,13 +464,67 @@ module "acr_private_endpoint" {
 #    ]
 # }
 
-module "application-gateway" {
-    source  = "aztfm/application-gateway/azurerm"
-    version = "1.2.0"
-    # insert the 11 required variables here
-    name = 
+resource "azurerm_public_ip" "appgw-pip" {
+  name                = "appgw-pip"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  allocation_method   = "Static"
+  sku = "Standard"
+}
+resource "azurerm_application_gateway" "application-gateway" {
+    name = var.appgw-name
+    resource_group_name = azurerm_resource_group.rg.name
+    location = var.location
+    sku {
+      name = var.appgw-sku
+      tier     = var.appgw-sku
+      capacity = 2
+    }
+
+    frontend_port {
+      name = var.frontend_port_name
+      port = var.appgw_frontend_port
+    }
+    frontend_ip_configuration {
+      name = var.frontend_ip_configuration_name
+      public_ip_address_id = azurerm_public_ip.appgw-pip.id
+    }
+
+    gateway_ip_configuration {
+      name = var.gateway_ip_configuration_name
+      subnet_id = module.virtual_network.subnet_ids[var.appgw_subnet_name]
+    }
+
+    backend_address_pool {
+        name = var.backend_address_pool_name
+    }
+
+    backend_http_settings {
+      name = var.backend_http_settings_name
+      cookie_based_affinity = "Disabled"
+      port = var.appgw_backend_port
+      protocol = var.appgw_backend_protocol
+      request_timeout = 120
+    }
+
+    http_listener {
+      name = var.http_listener_name
+      protocol = var.http_listener_protocol
+      frontend_ip_configuration_name = var.frontend_ip_configuration_name
+      frontend_port_name = var.frontend_port_name
+    }
+
+    request_routing_rule {
+      name = var.request_routing_rule_name
+      rule_type = var.request_routing_rule_type
+      http_listener_name = var.http_listener_name
+      backend_address_pool_name = var.backend_address_pool_name
+      backend_http_settings_name = var.backend_http_settings_name
+      priority = 1
+    }
 
     depends_on = [
-        module.virtual_network
+        module.virtual_network,
+        azurerm_public_ip.appgw-pip
     ]
 }

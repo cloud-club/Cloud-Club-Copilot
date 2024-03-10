@@ -47,12 +47,12 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     tags                    = var.tags
   }
 
-  linux_profile {
-    admin_username = var.admin_username
-    ssh_key {
-        key_data = var.ssh_public_key
-    }
-  }
+  # linux_profile {
+  #   admin_username = var.admin_username
+  #   ssh_key {
+  #       key_data = var.ssh_public_key
+  #   }
+  # }
 
   identity {
     type = "UserAssigned"
@@ -108,73 +108,33 @@ resource "azurerm_monitor_diagnostic_setting" "settings" {
 
   enabled_log {
     category = "kube-apiserver"
-
-    retention_policy {
-      enabled = true  
-      days    = var.log_analytics_retention_days
-    }
   }
 
   enabled_log {
     category = "kube-audit"
-
-    retention_policy {
-      enabled = true
-      days    = var.log_analytics_retention_days
-    }
   }
 
   enabled_log {
     category = "kube-audit-admin"
-
-    retention_policy {
-      enabled = true
-      days    = var.log_analytics_retention_days
-    }
   }
 
   enabled_log {
     category = "kube-controller-manager"
-
-    retention_policy {
-      enabled = true
-      days    = var.log_analytics_retention_days
-    }
   }
 
   enabled_log {
     category = "kube-scheduler"
-
-    retention_policy {
-      enabled = true
-      days    = var.log_analytics_retention_days
-    }
   }
 
   enabled_log {
     category = "cluster-autoscaler"
-
-    retention_policy {
-      enabled = true
-      days    = var.log_analytics_retention_days
-    }
   }
 
   enabled_log {
     category = "guard"
-
-    retention_policy {
-      enabled = true
-      days    = var.log_analytics_retention_days
-    }
   }
 
   metric {
     category = "AllMetrics"
-
-    retention_policy {
-      enabled = true
-      days    = var.log_analytics_retention_days
-    }
   }
 }
