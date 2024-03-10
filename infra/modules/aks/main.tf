@@ -35,7 +35,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     pod_subnet_id           = var.pod_subnet_id
     zones                   = var.system_node_pool_availability_zones
     node_labels             = var.system_node_pool_node_labels
-    node_taints             = var.system_node_pool_node_taints
+    # node_taints             = var.system_node_pool_node_taints
     enable_auto_scaling     = var.system_node_pool_enable_auto_scaling
     enable_host_encryption  = var.system_node_pool_enable_host_encryption
     enable_node_public_ip   = var.system_node_pool_enable_node_public_ip
@@ -71,15 +71,19 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
     log_analytics_workspace_id      = coalesce(var.oms_agent.log_analytics_workspace_id, var.log_analytics_workspace_id)
   }
 
-  dynamic "ingress_application_gateway" {
-    for_each = try(var.ingress_application_gateway.gateway_id, null) == null ? [] : [1]
-
-    content {
-      gateway_id                 = var.ingress_application_gateway.gateway_id
-      subnet_cidr                = var.ingress_application_gateway.subnet_cidr
-      subnet_id                  = var.ingress_application_gateway.subnet_id
-    }
+  ingress_application_gateway {
+    gateway_id = var.ingress_application_gateway_id
   }
+
+  # dynamic "ingress_application_gateway" {
+  #   for_each = try(var.ingress_application_gateway.gateway_id, null) == null ? [] : [1]
+
+  #   content {
+  #     gateway_id                 = var.ingress_application_gateway.gateway_id
+  #     subnet_cidr                = var.ingress_application_gateway.subnet_cidr
+  #     subnet_id                  = var.ingress_application_gateway.subnet_id
+  #   }
+  # }
 
   azure_active_directory_role_based_access_control {
     managed                    = true

@@ -4,7 +4,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "node_pool" {
   vm_size                      = var.vm_size
   mode                         = var.mode
   node_labels                  = var.node_labels
-  node_taints                  = var.node_taints
+  //node_taints                  = var.node_taints
   zones                        = var.availability_zones
   vnet_subnet_id               = var.vnet_subnet_id
   pod_subnet_id                = var.pod_subnet_id

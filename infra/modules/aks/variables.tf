@@ -238,23 +238,28 @@ variable "oms_agent" {
   }
 }
 
-variable "ingress_application_gateway" {
-  description = "Specifies the Application Gateway Ingress Controller addon configuration."
-  type        = object({
-    enabled      = bool
-    gateway_id   = string
-    gateway_name = string
-    subnet_cidr  = string
-    subnet_id    = string
-  })
-  default     = {
-    enabled      = false           
-    gateway_id   = null
-    gateway_name = null
-    subnet_cidr  = null
-    subnet_id    = null
-  }
+variable "ingress_application_gateway_id" {
+  description = "Application Gateway Ingress Controller ID"
+  type        = string
 }
+
+# variable "ingress_application_gateway" {
+#   description = "Specifies the Application Gateway Ingress Controller addon configuration."
+#   type        = object({
+#     enabled      = bool
+#     gateway_id   = string
+#     gateway_name = string
+#     subnet_cidr  = string
+#     subnet_id    = string
+#   })
+#   default     = {
+#     enabled      = false           
+#     gateway_id   = null
+#     gateway_name = null
+#     subnet_cidr  = null
+#     subnet_id    = null
+#   }
+# }
 
 variable "admin_username" {
   description = "(Required) Specifies the Admin Username for the AKS cluster worker nodes. Changing this forces a new resource to be created."

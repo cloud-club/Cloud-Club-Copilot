@@ -142,7 +142,7 @@ module "aks_cluster" {
   pod_subnet_id                           = module.virtual_network.subnet_ids[var.pod_subnet_name]
   system_node_pool_availability_zones     = var.system_node_pool_availability_zones
   system_node_pool_node_labels            = var.system_node_pool_node_labels
-  system_node_pool_node_taints            = var.system_node_pool_node_taints
+  //system_node_pool_node_taints            = var.system_node_pool_node_taints
   system_node_pool_enable_auto_scaling    = var.system_node_pool_enable_auto_scaling
   system_node_pool_enable_host_encryption = var.system_node_pool_enable_host_encryption
   system_node_pool_enable_node_public_ip  = var.system_node_pool_enable_node_public_ip
@@ -172,13 +172,7 @@ module "aks_cluster" {
   azure_policy_enabled                    = var.azure_policy_enabled
   http_application_routing_enabled        = var.http_application_routing_enabled
 
-  ingress_application_gateway = {
-    gateway_id = azurerm_application_gateway.application-gateway.id
-    subnet_id = module.virtual_network.subnet_ids[var.appgw_subnet_name]
-    gateway_name = var.appgw-name
-    subnet_cidr = var.appgw_subnet_address_prefix[0]
-    enabled = true
-  }
+  ingress_application_gateway_id = azurerm_application_gateway.application-gateway.id
 
   depends_on = [
     # module.nat_gateway,
@@ -195,7 +189,7 @@ module "node_pool" {
   vm_size                      = var.user_node_pool_vm_size
   mode                         = var.user_node_pool_mode
   node_labels                  = var.user_node_pool_node_labels
-  node_taints                  = var.user_node_pool_node_taints
+  //node_taints                  = var.user_node_pool_node_taints
   availability_zones           = var.user_node_pool_availability_zones
   vnet_subnet_id               = module.virtual_network.subnet_ids[var.user_node_pool_subnet_name]
   pod_subnet_id                = module.virtual_network.subnet_ids[var.pod_subnet_name]
@@ -527,4 +521,26 @@ resource "azurerm_application_gateway" "application-gateway" {
         module.virtual_network,
         azurerm_public_ip.appgw-pip
     ]
+}
+
+data "azurerm_resource_group" "mc_rg" {
+  name = module.aks_cluster.node_resource_group
+  depends_on = [ module.aks_cluster ]
+}
+
+data "azurerm_user_assigned_identity" "auto_created_agic_mi" {
+  name  = "ingressapplicationgateway-${lower(module.aks_cluster.name)}"
+  resource_group_name = data.azurerm_resource_group.mc_rg.name
+}
+
+resource "azurerm_role_assignment" "assign_contributor_agic" {
+  scope                = azurerm_application_gateway.application-gateway.id
+  role_definition_name = "Contributor"
+  principal_id         = data.azurerm_user_assigned_identity.auto_created_agic_mi.principal_id
+}
+
+resource "azurerm_role_assignment" "assign_reader_appgw_rg" {
+  scope                = azurerm_resource_group.rg.id
+  role_definition_name = "Reader"
+  principal_id         = data.azurerm_user_assigned_identity.auto_created_agic_mi.principal_id
 }
