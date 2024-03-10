@@ -6,6 +6,7 @@ import mimetypes
 import os
 from pathlib import Path
 from typing import Any, AsyncGenerator, Dict, Union, cast
+from dotenv import load_dotenv
 
 from azure.core.credentials import AzureKeyCredential
 from azure.core.credentials_async import AsyncTokenCredential
@@ -62,6 +63,8 @@ bp = Blueprint("routes", __name__, static_folder="static")
 # Fix Windows registry issue with mimetypes
 mimetypes.add_type("application/javascript", ".js")
 mimetypes.add_type("text/css", ".css")
+
+load_dotenv()
 
 
 @bp.route("/")
