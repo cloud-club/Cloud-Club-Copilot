@@ -33,3 +33,15 @@ variable "partition_count" {
         error_message = "The partition_count must be one of the following values: 1, 2, 3, 4, 6, 12."
     }
 }
+
+variable "resource_group_name" {
+    description = "The name of the resource group in which to create the search service."
+    type        = string
+}
+
+variable "location" {
+    description = "The location of the resource group in which to create the search service."
+    type        = string
+    default     = "eastus"
+  
+}

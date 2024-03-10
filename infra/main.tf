@@ -544,3 +544,13 @@ resource "azurerm_role_assignment" "assign_reader_appgw_rg" {
   role_definition_name = "Reader"
   principal_id         = data.azurerm_user_assigned_identity.auto_created_agic_mi.principal_id
 }
+
+module "ai_search" {
+  source                       = "./modules/ai_search"
+  # name                = var.ai-search-name
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  sku                 = var.sku
+  replica_count       = var.replica_count
+  partition_count     = var.partition_count
+}
