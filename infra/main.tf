@@ -139,7 +139,7 @@ module "aks_cluster" {
   tags                                    = var.tags
   network_dns_service_ip                  = var.network_dns_service_ip
   network_plugin                          = var.network_plugin
-  outbound_type                           = "userAssignedNATGateway"
+  outbound_type                           = "loadBalancer"
   network_service_cidr                    = var.network_service_cidr
   log_analytics_workspace_id              = module.log_analytics_workspace.id
   role_based_access_control_enabled       = var.role_based_access_control_enabled
@@ -157,9 +157,12 @@ module "aks_cluster" {
   azure_policy_enabled                    = var.azure_policy_enabled
   http_application_routing_enabled        = var.http_application_routing_enabled
 
+  ingress_application_gateway = module.application-gateway.id
+
   depends_on = [
-    module.nat_gateway,
-    module.container_registry
+    # module.nat_gateway,
+    module.container_registry,
+    module.application-gateway
   ]
 }
 
@@ -322,18 +325,18 @@ module "storage_account" {
 #   }
 # }
 
-# module "openai_private_dns_zone" {
-#   source                       = "./modules/private_dns_zone"
-#   name                         = "privatelink.openai.azure.com"
-#   resource_group_name          = azurerm_resource_group.rg.name
-#   tags                         = var.tags
-#   virtual_networks_to_link     = {
-#     (module.virtual_network.name) = {
-#       subscription_id = data.azurerm_client_config.current.subscription_id
-#       resource_group_name = azurerm_resource_group.rg.name
-#     }
-#   }
-# }
+module "openai_private_dns_zone" {
+  source                       = "./modules/private_dns_zone"
+  name                         = "privatelink.openai.azure.com"
+  resource_group_name          = azurerm_resource_group.rg.name
+  tags                         = var.tags
+  virtual_networks_to_link     = {
+    (module.virtual_network.name) = {
+      subscription_id = data.azurerm_client_config.current.subscription_id
+      resource_group_name = azurerm_resource_group.rg.name
+    }
+  }
+}
 
 # module "key_vault_private_dns_zone" {
 #   source                       = "./modules/private_dns_zone"
@@ -439,3 +442,14 @@ module "acr_private_endpoint" {
 #     module.aks_cluster
 #    ]
 # }
+
+module "application-gateway" {
+    source  = "aztfm/application-gateway/azurerm"
+    version = "1.2.0"
+    # insert the 11 required variables here
+    name = 
+
+    depends_on = [
+        module.virtual_network
+    ]
+}

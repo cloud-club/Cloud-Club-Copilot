@@ -1,25 +1,39 @@
-variable "aoai-name" {
-    description = "The name of the Azure OpenAI instance."
-    type        = string
-    default     = "cloudclub-aoai"
+variable "resource_group_name" {
+  description = "(Required) Specifies the resource group name"
+  type = string
 }
 
 variable "location" {
-    description = "The location/region where the Azure OpenAI instance should be created."
-    type        = string
-    default     = "eastus"
+  description = "(Required) Specifies the location of the Azure OpenAI Service"
+  type = string
+}
+
+variable "name" {
+  description = "(Required) Specifies the name of the Azure OpenAI Service"
+  type = string
 }
 
 variable "sku_name" {
-    description = "(Optional) Specifies the sku name for the Azure OpenAI Service"
-    type = string
-    default = "S0"
+  description = "(Optional) Specifies the sku name for the Azure OpenAI Service"
+  type = string
+  default = "S0"
+}
+
+variable "tags" {
+  description = "(Optional) Specifies the tags of the Azure OpenAI Service"
+  type        = map(any)
+  default     = {}
+}
+
+variable "custom_subdomain_name" {
+  description = "(Optional) Specifies the custom subdomain name of the Azure OpenAI Service"
+  type = string
 }
 
 variable "public_network_access_enabled" {
   description = "(Optional) Specifies whether public network access is allowed for the Azure OpenAI Service"
   type = bool
-  default = false
+  default = true
 }
 
 variable "deployments" {

@@ -17,16 +17,16 @@ variable "log_analytics_retention_days" {
   default     = 30
 }
 
-# variable "solution_plan_map" {
-#   description = "Specifies solutions to deploy to log analytics workspace"
-#   default     = {
-#     ContainerInsights= {
-#       product   = "OMSGallery/ContainerInsights"
-#       publisher = "Microsoft"
-#     }
-#   }
-#   type = map(any)
-# }
+variable "solution_plan_map" {
+  description = "Specifies solutions to deploy to log analytics workspace"
+  default     = {
+    ContainerInsights= {
+      product   = "OMSGallery/ContainerInsights"
+      publisher = "Microsoft"
+    }
+  }
+  type = map(any)
+}
 
 variable "location" {
   description = "Specifies the location for the resource group and all the resources"
@@ -42,7 +42,7 @@ variable "resource_group_name" {
 
 variable "vnet_name" {
   description = "Specifies the name of the AKS subnet"
-  default     = "AksVNet"
+  default     = "VNet"
   type        = string
 }
 
@@ -54,7 +54,7 @@ variable "vnet_address_space" {
 
 variable "system_node_pool_subnet_name" {
   description = "Specifies the name of the subnet that hosts the system node pool"
-  default     =  "SystemSubnet"
+  default     =  "system-nodepool-subnet"
   type        = string
 }
 
@@ -66,7 +66,7 @@ variable "system_node_pool_subnet_address_prefix" {
 
 variable "user_node_pool_subnet_name" {
   description = "Specifies the name of the subnet that hosts the user node pool"
-  default     =  "UserSubnet"
+  default     =  "user-nodepool-subnet"
   type        = string
 }
 
@@ -77,13 +77,13 @@ variable "user_node_pool_subnet_address_prefix" {
 }
 
 variable "pod_subnet_name" {
-  description = "Specifies the name of the jumpbox subnet"
-  default     = "PodSubnet"
+  description = "Specifies the name of the pod subnet"
+  default     = "pod-subnet"
   type        = string
 }
 
 variable "pod_subnet_address_prefix" {
-  description = "Specifies the address prefix of the jumbox subnet"
+  description = "Specifies the address prefix of the pod subnet"
   default     = ["10.242.0.0/16"]
   type        = list(string)
 }
@@ -558,10 +558,10 @@ variable "admin_username" {
   default     = "azadmin"
 }
 
-# variable "ssh_public_key" {
-#   description = "(Required) Specifies the SSH public key for the jumpbox virtual machine and AKS worker nodes."
-#   type        = string
-# }
+variable "ssh_public_key" {
+  description = "(Required) Specifies the SSH public key for the jumpbox virtual machine and AKS worker nodes."
+  type        = string
+}
 
 variable "keda_enabled" {
   description = "(Optional) Specifies whether KEDA Autoscaler can be used for workloads."
@@ -590,7 +590,7 @@ variable "oidc_issuer_enabled" {
 variable "open_service_mesh_enabled" {
   description = "(Optional) Is Open Service Mesh enabled? For more details, please visit Open Service Mesh for AKS."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "image_cleaner_enabled" {
@@ -602,7 +602,7 @@ variable "image_cleaner_enabled" {
 variable "azure_policy_enabled" {
   description = "(Optional) Should the Azure Policy Add-On be enabled? For more details please visit Understand Azure Policy for Azure Kubernetes Service"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "http_application_routing_enabled" {
@@ -633,7 +633,7 @@ variable "openai_custom_subdomain_name" {
 variable "openai_public_network_access_enabled" {
   description = "(Optional) Specifies whether public network access is allowed for the Azure OpenAI Service"
   type = bool
-  default = true
+  default = false
 }
 
 variable "openai_deployments" {
@@ -741,3 +741,43 @@ variable "service_account_name" {
 #   type = string
 #   default = "https://paolosalvatori.blob.core.windows.net/scripts/install-nginx-via-helm-and-create-sa.sh"
 # }
+
+variable "appgw-name" {
+    description = "Specifies the name of the Application Gateway."
+    type = string
+    default = "appgw-ingress"
+}
+
+variable "appgw-sku" {
+    description = "Specifies the SKU of the Application Gateway."
+    type = string
+    default = "Standard_v2"
+}
+
+variable "frontend_ip_configuration_name" {
+    description = "Specifies the name of the frontend IP configuration."
+    type = string
+    default = "appgw-frontend-ip"
+}
+
+variable "backend_address_pool_name" {
+    description = "Specifies the name of the backend address pool."
+    type = string
+    default = "appgw-backend-pool"
+}
+
+variable "http_settings_name" {
+    description = "Specifies the name of the HTTP settings."
+    type = string
+    default = "appgw-http-settings"
+}
+
+variable "frontend_port_name" {
+    description = "Specifies the name of the frontend port."
+    type = string
+    default = "appgw-frontend-port"
+}
+
+variable "" {
+  
+}

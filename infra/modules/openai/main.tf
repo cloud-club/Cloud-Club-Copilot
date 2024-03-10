@@ -1,10 +1,12 @@
 resource "azurerm_cognitive_account" "openai" {
-  name                          = var.aoai-name
+  name                          = var.name
   location                      = var.location
-  resource_group_name           = azurerm_resource_group.resource-group.name
+  resource_group_name           = var.resource_group_name
   kind                          = "OpenAI"
+  custom_subdomain_name         = var.custom_subdomain_name
   sku_name                      = var.sku_name
   public_network_access_enabled = var.public_network_access_enabled
+  tags                          = var.tags
 
   identity {
     type = "SystemAssigned"
@@ -18,7 +20,7 @@ resource "azurerm_cognitive_account" "openai" {
 }
 
 resource "azurerm_cognitive_deployment" "deployment" {
-  for_each = { for deployment in var.deployments : deployment.name => deployment }
+  for_each             = {for deployment in var.deployments: deployment.name => deployment}
 
   name                 = each.key
   cognitive_account_id = azurerm_cognitive_account.openai.id
@@ -75,4 +77,3 @@ resource "azurerm_monitor_diagnostic_setting" "settings" {
     }
   }
 }
-
