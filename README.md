@@ -15,7 +15,7 @@
 
 ## 아키텍처
 
-![Architecture](docs/images/archi.png)
+![Architecture](docs/images/archi-new.png)
 
 ## 시나리오
 
