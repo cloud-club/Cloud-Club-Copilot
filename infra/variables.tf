@@ -639,7 +639,7 @@ variable "openai_custom_subdomain_name" {
 variable "openai_public_network_access_enabled" {
   description = "(Optional) Specifies whether public network access is allowed for the Azure OpenAI Service"
   type = bool
-  default = false
+  default = true
 }
 
 variable "openai_deployments" {
@@ -748,13 +748,19 @@ variable "service_account_name" {
 #   default = "https://paolosalvatori.blob.core.windows.net/scripts/install-nginx-via-helm-and-create-sa.sh"
 # }
 
-variable "appgw-name" {
+variable "appgw_pip" {
+  description = "value of the public ip address of the application gateway"
+  type = string
+  default = "appgw-pip"
+}
+
+variable "appgw_name" {
     description = "Specifies the name of the Application Gateway."
     type = string
     default = "appgw-ingress"
 }
 
-variable "appgw-sku" {
+variable "appgw_sku" {
     description = "Specifies the SKU of the Application Gateway."
     type = string
     default = "Standard_v2"
@@ -858,10 +864,10 @@ variable "gateway_ip_configuration_name" {
     default = "appgw-gateway-ip-config"
 }
 
-variable "ai-search-name" {
+variable "ai_search_name" {
     description = "The name of the search service."
     type        = string
-    default = "cloudclub-ai-search"
+    default = "ai-search"
 }
 
 variable "sku" {

@@ -1,7 +1,6 @@
-variable "ai-search-name" {
+variable "name" {
     description = "The name of the search service."
     type        = string
-    default = "cloudclub-ai-search"
 }
 
 variable "sku" {

@@ -21,14 +21,14 @@ resource "random_string" "storage_account_suffix" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = var.name_prefix == null ? "${random_string.prefix.result}${var.resource_group_name}" : "${var.name_prefix}${var.resource_group_name}"
+  name     = var.name_prefix == null ? "${random_string.prefix.result}${var.resource_group_name}" : "${var.name_prefix}-${var.resource_group_name}"
   location = var.location
   tags     = var.tags
 }
 
 module "log_analytics_workspace" {
   source                           = "./modules/log_analytics"
-  name                             = var.name_prefix == null ? "${random_string.prefix.result}${var.log_analytics_workspace_name}" : "${var.name_prefix}${var.log_analytics_workspace_name}"
+  name                             = var.name_prefix == null ? "${random_string.prefix.result}${var.log_analytics_workspace_name}" : "${var.name_prefix}-${var.log_analytics_workspace_name}"
   location                         = var.location
   resource_group_name              = azurerm_resource_group.rg.name
   solution_plan_map                = var.solution_plan_map
@@ -39,7 +39,7 @@ module "virtual_network" {
   source                       = "./modules/virtual_network"
   resource_group_name          = azurerm_resource_group.rg.name
   location                     = var.location
-  vnet_name                    = var.name_prefix == null ? "${random_string.prefix.result}${var.vnet_name}" : "${var.name_prefix}${var.vnet_name}"
+  vnet_name                    = var.name_prefix == null ? "${random_string.prefix.result}${var.vnet_name}" : "${var.name_prefix}-${var.vnet_name}"
   address_space                = var.vnet_address_space
   log_analytics_workspace_id   = module.log_analytics_workspace.id
   log_analytics_retention_days = var.log_analytics_retention_days
@@ -101,7 +101,7 @@ module "virtual_network" {
 
 # module "nat_gateway" {
 #   source                       = "./modules/nat_gateway"
-#   name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.nat_gateway_name}" : "${var.name_prefix}${var.nat_gateway_name}"
+#   name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.nat_gateway_name}" : "${var.name_prefix}-${var.nat_gateway_name}"
 #   resource_group_name          = azurerm_resource_group.rg.name
 #   location                     = var.location
 #   sku_name                     = var.nat_gateway_sku_name
@@ -113,7 +113,7 @@ module "virtual_network" {
 
 module "container_registry" {
   source                       = "./modules/container_registry"
-  name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
+  name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}-${var.acr_name}"
   resource_group_name          = azurerm_resource_group.rg.name
   location                     = var.location
   sku                          = var.acr_sku
@@ -127,7 +127,7 @@ module "container_registry" {
 
 module "aks_cluster" {
   source                                  = "./modules/aks"
-  name                                    = var.name_prefix == null ? "${random_string.prefix.result}${var.aks_cluster_name}" : "${var.name_prefix}${var.aks_cluster_name}"
+  name                                    = var.name_prefix == null ? "${random_string.prefix.result}${var.aks_cluster_name}" : "${var.name_prefix}-${var.aks_cluster_name}"
   location                                = var.location
   resource_group_name                     = azurerm_resource_group.rg.name
   resource_group_id                       = azurerm_resource_group.rg.id
@@ -208,20 +208,20 @@ module "node_pool" {
 
 module "openai" {
   source                                   = "./modules/openai"
-  name                                     = var.name_prefix == null ? "${random_string.prefix.result}${var.openai_name}" : "${var.name_prefix}${var.openai_name}"
+  name                                     = var.name_prefix == null ? "${random_string.prefix.result}${var.openai_name}" : "${var.name_prefix}-${var.openai_name}"
   location                                 = var.location
   resource_group_name                      = azurerm_resource_group.rg.name
   sku_name                                 = var.openai_sku_name
   tags                                     = var.tags
   deployments                              = var.openai_deployments
-  custom_subdomain_name                    = var.openai_custom_subdomain_name == "" || var.openai_custom_subdomain_name == null ? var.name_prefix == null ? lower("${random_string.prefix.result}${var.openai_name}") : lower("${var.name_prefix}${var.openai_name}") : lower(var.openai_custom_subdomain_name)
+  custom_subdomain_name                    = var.openai_custom_subdomain_name == "" || var.openai_custom_subdomain_name == null ? var.name_prefix == null ? lower("${random_string.prefix.result}${var.openai_name}") : lower("${var.name_prefix}-${var.openai_name}") : lower(var.openai_custom_subdomain_name)
   public_network_access_enabled            = var.openai_public_network_access_enabled
   log_analytics_workspace_id               = module.log_analytics_workspace.id
   log_analytics_retention_days             = var.log_analytics_retention_days
 }
 
 resource "azurerm_user_assigned_identity" "aks_workload_identity" {
-  name                = var.name_prefix == null ? "${random_string.prefix.result}${var.workload_managed_identity_name}" : "${var.name_prefix}${var.workload_managed_identity_name}"
+  name                = var.name_prefix == null ? "${random_string.prefix.result}${var.workload_managed_identity_name}" : "${var.name_prefix}-${var.workload_managed_identity_name}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
   tags                = var.tags
@@ -277,7 +277,7 @@ module "storage_account" {
 
 # module "bastion_host" {
 #   source                       = "./modules/bastion_host"
-#   name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.bastion_host_name}" : "${var.name_prefix}${var.bastion_host_name}"
+#   name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.bastion_host_name}" : "${var.name_prefix}-${var.bastion_host_name}"
 #   location                     = var.location
 #   resource_group_name          = azurerm_resource_group.rg.name
 #   subnet_id                    = module.virtual_network.subnet_ids["AzureBastionSubnet"]
@@ -289,7 +289,7 @@ module "storage_account" {
 # module "virtual_machine" {
 #   count                               = var.vm_enabled ? 1 : 0
 #   source                              = "./modules/virtual_machine"
-#   name                                = var.name_prefix == null ? "${random_string.prefix.result}${var.vm_name}" : "${var.name_prefix}${var.vm_name}"
+#   name                                = var.name_prefix == null ? "${random_string.prefix.result}${var.vm_name}" : "${var.name_prefix}-${var.vm_name}"
 #   size                                = var.vm_size
 #   location                            = var.location
 #   public_ip                           = var.vm_public_ip
@@ -309,7 +309,7 @@ module "storage_account" {
 
 # module "key_vault" {
 #   source                          = "./modules/key_vault"
-#   name                            = var.name_prefix == null ? "${random_string.prefix.result}${var.key_vault_name}" : "${var.name_prefix}${var.key_vault_name}"
+#   name                            = var.name_prefix == null ? "${random_string.prefix.result}${var.key_vault_name}" : "${var.name_prefix}-${var.key_vault_name}"
 #   location                        = var.location
 #   resource_group_name             = azurerm_resource_group.rg.name
 #   tenant_id                       = data.azurerm_client_config.current.tenant_id
@@ -340,18 +340,18 @@ module "acr_private_dns_zone" {
   }
 }
 
-module "openai_private_dns_zone" {
-  source                       = "./modules/private_dns_zone"
-  name                         = "privatelink.openai.azure.com"
-  resource_group_name          = azurerm_resource_group.rg.name
-  tags                         = var.tags
-  virtual_networks_to_link     = {
-    (module.virtual_network.name) = {
-      subscription_id = data.azurerm_client_config.current.subscription_id
-      resource_group_name = azurerm_resource_group.rg.name
-    }
-  }
-}
+# module "openai_private_dns_zone" {
+#   source                       = "./modules/private_dns_zone"
+#   name                         = "privatelink.openai.azure.com"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   tags                         = var.tags
+#   virtual_networks_to_link     = {
+#     (module.virtual_network.name) = {
+#       subscription_id = data.azurerm_client_config.current.subscription_id
+#       resource_group_name = azurerm_resource_group.rg.name
+#     }
+#   }
+# }
 
 # module "key_vault_private_dns_zone" {
 #   source                       = "./modules/private_dns_zone"
@@ -379,19 +379,19 @@ module "openai_private_dns_zone" {
 #   }
 # }
 
-module "openai_private_endpoint" {
-  source                         = "./modules/private_endpoint"
-  name                           = "${module.openai.name}PrivateEndpoint"
-  location                       = var.location
-  resource_group_name            = azurerm_resource_group.rg.name
-  subnet_id                      = module.virtual_network.subnet_ids[var.private_endpoint_subnet_name]
-  tags                           = var.tags
-  private_connection_resource_id = module.openai.id
-  is_manual_connection           = false
-  subresource_name               = "account"
-  private_dns_zone_group_name    = "AcrPrivateDnsZoneGroup"
-  private_dns_zone_group_ids     = [module.openai_private_dns_zone.id]
-}
+# module "openai_private_endpoint" {
+#   source                         = "./modules/private_endpoint"
+#   name                           = "${module.openai.name}PrivateEndpoint"
+#   location                       = var.location
+#   resource_group_name            = azurerm_resource_group.rg.name
+#   subnet_id                      = module.virtual_network.subnet_ids[var.private_endpoint_subnet_name]
+#   tags                           = var.tags
+#   private_connection_resource_id = module.openai.id
+#   is_manual_connection           = false
+#   subresource_name               = "account"
+#   private_dns_zone_group_name    = "AcrPrivateDnsZoneGroup"
+#   private_dns_zone_group_ids     = [module.openai_private_dns_zone.id]
+# }
 
 module "acr_private_endpoint" {
   source                         = "./modules/private_endpoint"
@@ -423,7 +423,7 @@ module "acr_private_endpoint" {
 
 # module "blob_private_endpoint" {
 #   source                         = "./modules/private_endpoint"
-#   name                           = var.name_prefix == null ? "${random_string.prefix.result}BlocStoragePrivateEndpoint" : "${var.name_prefix}BlobStoragePrivateEndpoint"
+#   name                           = var.name_prefix == null ? "${random_string.prefix.result}BlocStoragePrivateEndpoint" : "${var.name_prefix}-BlobStoragePrivateEndpoint"
 #   location                       = var.location
 #   resource_group_name            = azurerm_resource_group.rg.name
 #   subnet_id                      = module.virtual_network.subnet_ids[var.vm_subnet_name]
@@ -437,11 +437,11 @@ module "acr_private_endpoint" {
 
 # module "deployment_script" {
 #   source                              = "./modules/deployment_script"
-#   name                                = var.name_prefix == null ? "${random_string.prefix.result}${var.deployment_script_name}" : "${var.name_prefix}${var.deployment_script_name}"
+#   name                                = var.name_prefix == null ? "${random_string.prefix.result}${var.deployment_script_name}" : "${var.name_prefix}-${var.deployment_script_name}"
 #   location                            = var.location
 #   resource_group_name                 = azurerm_resource_group.rg.name
 #   azure_cli_version                   = var.deployment_script_azure_cli_version
-#   managed_identity_name               = var.name_prefix == null ? "${random_string.prefix.result}${var.deployment_script_managed_identity_name}" : "${var.name_prefix}${var.deployment_script_managed_identity_name}"
+#   managed_identity_name               = var.name_prefix == null ? "${random_string.prefix.result}${var.deployment_script_managed_identity_name}" : "${var.name_prefix}-${var.deployment_script_managed_identity_name}"
 #   aks_cluster_name                    = module.aks_cluster.name
 #   hostname                            = "${var.subdomain}.${var.domain}"
 #   namespace                           = var.namespace
@@ -459,19 +459,19 @@ module "acr_private_endpoint" {
 # }
 
 resource "azurerm_public_ip" "appgw-pip" {
-  name                = "appgw-pip"
+  name                = var.name_prefix == null ? "${random_string.prefix.result}${var.vnet_name}" : "${var.name_prefix}-${var.appgw_pip}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
   allocation_method   = "Static"
   sku = "Standard"
 }
 resource "azurerm_application_gateway" "application-gateway" {
-    name = var.appgw-name
+    name = var.name_prefix == null ? "${random_string.prefix.result}${var.vnet_name}" : "${var.name_prefix}-${var.appgw_name}"
     resource_group_name = azurerm_resource_group.rg.name
     location = var.location
     sku {
-      name = var.appgw-sku
-      tier     = var.appgw-sku
+      name = var.appgw_sku
+      tier     = var.appgw_sku
       capacity = 2
     }
 
@@ -547,7 +547,8 @@ resource "azurerm_role_assignment" "assign_reader_appgw_rg" {
 
 module "ai_search" {
   source                       = "./modules/ai_search"
-  # name                = var.ai-search-name
+  
+  name = var.name_prefix == null ? "${random_string.prefix.result}${var.vnet_name}" : "${var.name_prefix}-${var.ai_search_name}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
   sku                 = var.sku
