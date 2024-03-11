@@ -113,7 +113,7 @@ module "virtual_network" {
 
 module "container_registry" {
   source                       = "./modules/container_registry"
-  name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}-${var.acr_name}"
+  name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}${random_string.prefix.result}"
   resource_group_name          = azurerm_resource_group.rg.name
   location                     = var.location
   sku                          = var.acr_sku
