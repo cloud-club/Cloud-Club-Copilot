@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chatbot-app-ingress
+  annotations:
+    appgw.ingress.kubernetes.io/use-private-ip: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: chatbot-internal-lb
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
