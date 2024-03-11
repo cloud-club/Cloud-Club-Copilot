@@ -28,7 +28,7 @@
 ### 로컬에서 앱 실행하기
 
 1. `.env` 파일 만들기
-2. `app/start.sh` 실행
+2. `app/start-dev.sh` 실행
 
   ```bash
   cd app

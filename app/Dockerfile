@@ -10,7 +10,10 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies
-RUN npm install
+RUN cd frontend && npm install && cd ..
+
+# Install Python dependencies
+RUN cd backend && python3 -m pip install -r requirements.txt && cd ..
 
 # Start your application
-CMD [ "npm", "start" ]
+CMD [ "source" "start.sh" ]
