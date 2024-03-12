@@ -54,3 +54,6 @@ ouput 값으로 이런 값들이 나옵니다.
 ## Action 테스트하기
 
 - TBD
+
+## [Todo] Github Action 에러 보면서 원인 찾기
+

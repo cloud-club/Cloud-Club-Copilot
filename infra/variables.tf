@@ -1,7 +1,7 @@
 variable "name_prefix" {
   description = "(Optional) A prefix for the name of all the resource groups and resources."
   type        = string
-  default     = "CloudClub"
+  default     = "test05"
   nullable    = true
 }
 
@@ -172,7 +172,7 @@ variable "kubernetes_version" {
 
 variable "system_node_pool_vm_size" {
   description = "Specifies the vm size of the system node pool"
-  default     = "Standard_F8s_v2"
+  default     = "Standard_F4s_v2"
   type        = string
 }
 
@@ -245,7 +245,7 @@ variable "system_node_pool_node_taints" {
 variable "system_node_pool_os_disk_type" {
   description = "(Optional) The type of disk which should be used for the Operating System. Possible values are Ephemeral and Managed. Defaults to Managed. Changing this forces a new resource to be created."
   type          = string
-  default       = "Ephemeral"
+  default       = "Managed"
 } 
 
 variable "system_node_pool_max_count" {
@@ -275,7 +275,7 @@ variable "user_node_pool_name" {
 variable "user_node_pool_vm_size" {
   description = "(Required) The SKU which should be used for the Virtual Machines used in this Node Pool. Changing this forces a new resource to be created."
   type        = string
-  default     = "Standard_F8s_v2"
+  default     = "Standard_F4s_v2"
 }
 
 variable "user_node_pool_availability_zones" {
@@ -329,7 +329,7 @@ variable "user_node_pool_node_taints" {
 variable "user_node_pool_os_disk_type" {
   description = "(Optional) The type of disk which should be used for the Operating System. Possible values are Ephemeral and Managed. Defaults to Managed. Changing this forces a new resource to be created."
   type          = string
-  default       = "Ephemeral"
+  default       = "Managed"
 } 
 
 variable "user_node_pool_os_type" {
@@ -654,10 +654,10 @@ variable "openai_deployments" {
   }))
   default = [
     {
-      name = "gpt-35-turbo"
+      name = "gpt-35-turbo-16k"
       model = {
-        name = "gpt-35-turbo"
-        version = "0301"
+        name = "gpt-35-turbo-16k"
+        version = "0613"
       }
       rai_policy_name = ""
     }
