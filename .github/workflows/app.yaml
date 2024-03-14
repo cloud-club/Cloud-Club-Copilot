@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "app/**"
+      - ".github/workflows/app.yaml"
 jobs:
   build:
     runs-on: ubuntu-latest
