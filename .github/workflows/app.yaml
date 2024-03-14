@@ -15,7 +15,7 @@ jobs:
           path: repo
 
       - name: Move app directory
-        run: mv repo/app . && rm -rf repo
+        run: mv repo/app . && mv repo/manifest . && rm -rf repo
 
       - name: Set up .env
         run: echo "${{ secrets.ENV_SECRET }}" > .env
