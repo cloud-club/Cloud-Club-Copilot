@@ -271,9 +271,11 @@ async def setup_clients():
         await key_vault_client.close()
 
     # Set up clients for AI Search and Storage
-    search_credential: Union[AsyncTokenCredential, AzureKeyCredential] = (
-        AzureKeyCredential(search_key) if search_key else azure_credential
-    )
+    # search_credential: Union[AsyncTokenCredential, AzureKeyCredential] = (
+    #     AzureKeyCredential(search_key) if search_key else azure_credential
+    # )
+    search_credential = azure_credential
+    
     search_client = SearchClient(
         endpoint=f"https://{AZURE_SEARCH_SERVICE}.search.windows.net",
         index_name=AZURE_SEARCH_INDEX,
