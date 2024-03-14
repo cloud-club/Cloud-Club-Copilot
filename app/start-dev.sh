@@ -11,6 +11,7 @@ cd ..
 
 # Run backend
 cd backend
+pip3 install -r requirements.txt
 port=50505
 host=localhost
 python3 -m quart --app main:app run --port "$port" --host "$host" --reload
