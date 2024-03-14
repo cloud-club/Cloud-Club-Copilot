@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 nikolaik/python-nodejs:python3.10-nodejs21
+FROM nikolaik/python-nodejs:python3.10-nodejs21
 
 # Set the working directory
 WORKDIR /app
