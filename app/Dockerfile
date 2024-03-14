@@ -1,10 +1,13 @@
-FROM nikolaik/python-nodejs:python3.10-nodejs21
+FROM --platform=linux/amd64 nikolaik/python-nodejs:python3.10-nodejs21
 
 # Set the working directory
 WORKDIR /app
 
 # Copy your application code to the container
 COPY . .
+
+# Install bash
+RUN apt-get update && apt-get install -y bash
 
 # Install dependencies
 RUN cd frontend && npm install && cd ..
@@ -13,4 +16,4 @@ RUN cd frontend && npm install && cd ..
 RUN cd backend && python3 -m pip install -r requirements.txt && cd ..
 
 # Start your application
-CMD [ "source" "start-prod.sh" ]
+CMD ["/bin/bash", "-c", "source start-dev.sh"]

@@ -42,6 +42,8 @@ jobs:
         with:
           resource-group: '${{ secrets.RESOURCE_GROUP }}' 
           cluster-name: '${{ secrets.CLUSTER_NAME }}'
+          admin: 'false'
+          use-kubelogin: 'true'
 
       - name: Setup kubectl
         id: install-kubectl
