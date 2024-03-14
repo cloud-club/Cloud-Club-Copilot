@@ -10,6 +10,14 @@ jobs:
     steps:
       - name: Checkout source code 
         uses: actions/checkout@v3
+        with:
+          path: repo
+
+      - name: Move app directory
+        run: mv repo/app . && rm -rf repo
+
+      - name: Set up .env
+        run: echo "${{ secrets.ENV_SECRET }}" > .env
 
       - name: ACR build
         id: build-push-acr
