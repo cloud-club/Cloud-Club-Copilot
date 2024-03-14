@@ -1,7 +1,4 @@
-FROM node:14
-
-# Install Python 3.10
-RUN apt-get update && apt-get install -y python3.10
+FROM nikolaik/python-nodejs:python3.10-nodejs21
 
 # Set the working directory
 WORKDIR /app
@@ -16,4 +13,4 @@ RUN cd frontend && npm install && cd ..
 RUN cd backend && python3 -m pip install -r requirements.txt && cd ..
 
 # Start your application
-CMD [ "source" "start.sh" ]
+CMD [ "source" "start-prod.sh" ]

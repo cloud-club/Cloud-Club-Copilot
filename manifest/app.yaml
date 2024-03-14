@@ -21,6 +21,6 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: chatbot-app-container
-        image: <registryName>.azurecr.io/chatbot-app:v1
+        image: test05Acrcmgqyd.azurecr.io/cloudclub/chatbot-app:v1
         ports:
         - containerPort: 80
