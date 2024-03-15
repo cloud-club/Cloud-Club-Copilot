@@ -46,7 +46,7 @@ jobs:
       - name: Build and push Docker image to ACR
         run: |
           docker build -t ${{ secrets.REGISTRY }}.azurecr.io/${{ secrets.REPOSITORY }}/chatbot-app:${{ github.sha }} app
-          az acr login --name ${{ secrets.REGISTRY }}
+          docker login ${{ secrets.REGISTRY }}.azurecr.io -u ${{ secrets.SERVICE_PRINCIPAL }} -p ${{ secrets.SERVICE_PRINCIPAL_PASSWORD }}
           docker push ${{ secrets.REGISTRY }}.azurecr.io/${{ secrets.REPOSITORY }}/chatbot-app:${{ github.sha }}
 
       - name: Set up kubelogin
