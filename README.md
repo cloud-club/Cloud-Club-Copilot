@@ -15,7 +15,7 @@
 
 ### 아키텍처
 
-![Architecture](docs/images/archi-without-pe.png)
+![Architecture](docs/images/archi-real.png)
 
 ### 시나리오
 

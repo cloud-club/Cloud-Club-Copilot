@@ -35,6 +35,11 @@ ouput 값으로 이런 값들이 나옵니다.
 }
 ```
 
+## 3. Service Principal 에게 필요한 권한 주기
+
+- ACR Push
+- AKS RBAC cluster admin
+
 ## 3. Secret 값 지정하기
 
 포크를 떠서 가져간 레포에서 `Settings > Security > Secrets and Variables > Actions` 에 들어가 output으로 나온 값들과 AKS/ACR 정보를 차례로 입력합니다.
@@ -53,7 +58,7 @@ ouput 값으로 이런 값들이 나옵니다.
 
 ## Action 테스트하기
 
-- TBD
+- AKS에 앱을 배포해봅시다
+- build 성공~
 
-## [Todo] Github Action 에러 보면서 원인 찾기
 
