@@ -545,6 +545,12 @@ resource "azurerm_role_assignment" "assign_reader_appgw_rg" {
   principal_id         = data.azurerm_user_assigned_identity.auto_created_agic_mi.principal_id
 }
 
+resource "azurerm_role_assignment" "assign_contributor_appgw_rg" {
+  scope                = module.virtual_network.subnet_ids[var.appgw_subnet_name]
+  role_definition_name = "Network Contributor"
+  principal_id         = data.azurerm_user_assigned_identity.auto_created_agic_mi.principal_id
+}
+
 module "ai_search" {
   source                       = "./modules/ai_search"
   
