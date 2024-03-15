@@ -18,7 +18,7 @@ jobs:
         run: mv repo/app . && mv repo/manifest . && rm -rf repo
 
       - name: Set up .env
-        run: echo "${{ secrets.ENV_SECRET }}" > .env
+        run: echo "${{ secrets.ENV_SECRET }}" > app/.env
 
       - name: Check if .env file exists
         run: pwd && ls -la
