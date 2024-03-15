@@ -1,7 +1,5 @@
 # Set environment variables
 source .env
-echo ls
-cat .env
 # Activate virtual environment
 # source venv/bin/activate
 

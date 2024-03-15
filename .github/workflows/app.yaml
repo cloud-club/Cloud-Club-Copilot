@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - "app/**"
-      - ".github/workflows/app.yaml"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,23 +18,6 @@ jobs:
 
       - name: Set up .env
         run: echo "${{ secrets.ENV_SECRET }}" > app/.env
-
-      - name: Check if .env file exists
-        run: cd app && ls -la
-
-      # - name: ACR build
-      #   id: build-push-acr
-      #   uses: azure/acr-build@v1
-      #   with:
-      #     service_principal: ${{ secrets.SERVICE_PRINCIPAL }}
-      #     service_principal_password: ${{ secrets.SERVICE_PRINCIPAL_PASSWORD }}
-      #     tenant: ${{ secrets.TENANT }}
-      #     registry: ${{ secrets.REGISTRY }}
-      #     repository: ${{ secrets.REPOSITORY }}
-      #     image:  chatbot-app
-      #     folder: app
-      #     branch: main
-      #     tag: ${{ githubsha }}
 
       - name: Azure login
         id: login
