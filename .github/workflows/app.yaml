@@ -23,25 +23,31 @@ jobs:
       - name: Check if .env file exists
         run: cd app && ls -la
 
-      - name: ACR build
-        id: build-push-acr
-        uses: azure/acr-build@v1
-        with:
-          service_principal: ${{ secrets.SERVICE_PRINCIPAL }}
-          service_principal_password: ${{ secrets.SERVICE_PRINCIPAL_PASSWORD }}
-          tenant: ${{ secrets.TENANT }}
-          registry: ${{ secrets.REGISTRY }}
-          repository: ${{ secrets.REPOSITORY }}
-          image:  chatbot-app
-          folder: app
-          branch: main
-          tag: ${{ github.sha }}
+      # - name: ACR build
+      #   id: build-push-acr
+      #   uses: azure/acr-build@v1
+      #   with:
+      #     service_principal: ${{ secrets.SERVICE_PRINCIPAL }}
+      #     service_principal_password: ${{ secrets.SERVICE_PRINCIPAL_PASSWORD }}
+      #     tenant: ${{ secrets.TENANT }}
+      #     registry: ${{ secrets.REGISTRY }}
+      #     repository: ${{ secrets.REPOSITORY }}
+      #     image:  chatbot-app
+      #     folder: app
+      #     branch: main
+      #     tag: ${{ githubsha }}
 
       - name: Azure login
         id: login
         uses: azure/login@v1.4.3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Build and push Docker image to ACR
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}.azurecr.io/${{ secrets.REPOSITORY }}/chatbot-app:${{ github.sha }} app
+          az acr login --name ${{ secrets.REGISTRY }}
+          docker push ${{ secrets.REGISTRY }}.azurecr.io/${{ secrets.REPOSITORY }}/chatbot-app:${{ github.sha }}
 
       - name: Set up kubelogin
         uses: azure/use-kubelogin@v1
