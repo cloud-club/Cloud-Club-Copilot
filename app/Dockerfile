@@ -6,6 +6,7 @@ WORKDIR /app
 # Copy your application code to the container
 COPY . .
 
+RUN ls /app
 # Install bash
 RUN apt-get update && apt-get install -y bash
 
@@ -16,4 +17,4 @@ RUN cd frontend && npm install && cd ..
 RUN cd backend && python3 -m pip install -r requirements.txt && cd ..
 
 # Start your application
-CMD ["/bin/bash", "-c", "source start-dev.sh"]
+CMD ["/bin/bash", "-c", "source start-prod.sh"]
