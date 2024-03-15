@@ -206,19 +206,19 @@ module "node_pool" {
   tags                         = var.tags
 }
 
-module "openai" {
-  source                                   = "./modules/openai"
-  name                                     = var.name_prefix == null ? "${random_string.prefix.result}${var.openai_name}" : "${var.name_prefix}-${var.openai_name}"
-  location                                 = var.location
-  resource_group_name                      = azurerm_resource_group.rg.name
-  sku_name                                 = var.openai_sku_name
-  tags                                     = var.tags
-  deployments                              = var.openai_deployments
-  custom_subdomain_name                    = var.openai_custom_subdomain_name == "" || var.openai_custom_subdomain_name == null ? var.name_prefix == null ? lower("${random_string.prefix.result}${var.openai_name}") : lower("${var.name_prefix}-${var.openai_name}") : lower(var.openai_custom_subdomain_name)
-  public_network_access_enabled            = var.openai_public_network_access_enabled
-  log_analytics_workspace_id               = module.log_analytics_workspace.id
-  log_analytics_retention_days             = var.log_analytics_retention_days
-}
+# module "openai" {
+#   source                                   = "./modules/openai"
+#   name                                     = var.name_prefix == null ? "${random_string.prefix.result}${var.openai_name}" : "${var.name_prefix}-${var.openai_name}"
+#   location                                 = var.location
+#   resource_group_name                      = azurerm_resource_group.rg.name
+#   sku_name                                 = var.openai_sku_name
+#   tags                                     = var.tags
+#   deployments                              = var.openai_deployments
+#   custom_subdomain_name                    = var.openai_custom_subdomain_name == "" || var.openai_custom_subdomain_name == null ? var.name_prefix == null ? lower("${random_string.prefix.result}${var.openai_name}") : lower("${var.name_prefix}-${var.openai_name}") : lower(var.openai_custom_subdomain_name)
+#   public_network_access_enabled            = var.openai_public_network_access_enabled
+#   log_analytics_workspace_id               = module.log_analytics_workspace.id
+#   log_analytics_retention_days             = var.log_analytics_retention_days
+# }
 
 resource "azurerm_user_assigned_identity" "aks_workload_identity" {
   name                = var.name_prefix == null ? "${random_string.prefix.result}${var.workload_managed_identity_name}" : "${var.name_prefix}-${var.workload_managed_identity_name}"
@@ -233,12 +233,12 @@ resource "azurerm_user_assigned_identity" "aks_workload_identity" {
   }
 }
 
-resource "azurerm_role_assignment" "cognitive_services_user_assignment" {
-  scope                = module.openai.id
-  role_definition_name = "Cognitive Services User"
-  principal_id         = azurerm_user_assigned_identity.aks_workload_identity.principal_id
-  skip_service_principal_aad_check = true
-}
+# resource "azurerm_role_assignment" "cognitive_services_user_assignment" {
+#   scope                = module.openai.id
+#   role_definition_name = "Cognitive Services User"
+#   principal_id         = azurerm_user_assigned_identity.aks_workload_identity.principal_id
+#   skip_service_principal_aad_check = true
+# }
 
 resource "azurerm_federated_identity_credential" "federated_identity_credential" {
   name                = "${title(var.namespace)}FederatedIdentity"
@@ -263,17 +263,17 @@ resource "azurerm_role_assignment" "acr_pull_assignment" {
   skip_service_principal_aad_check = true
 }
 
-module "storage_account" {
-  source                      = "./modules/storage_account"
-  name                        = "${local.storage_account_prefix}${random_string.storage_account_suffix.result}"
-  location                    = var.location
-  resource_group_name         = azurerm_resource_group.rg.name
-  account_kind                = var.storage_account_kind
-  account_tier                = var.storage_account_tier
-  replication_type            = var.storage_account_replication_type
-  tags                        = var.tags
+# module "storage_account" {
+#   source                      = "./modules/storage_account"
+#   name                        = "${local.storage_account_prefix}${random_string.storage_account_suffix.result}"
+#   location                    = var.location
+#   resource_group_name         = azurerm_resource_group.rg.name
+#   account_kind                = var.storage_account_kind
+#   account_tier                = var.storage_account_tier
+#   replication_type            = var.storage_account_replication_type
+#   tags                        = var.tags
 
-}
+# }
 
 # module "bastion_host" {
 #   source                       = "./modules/bastion_host"
@@ -551,13 +551,13 @@ resource "azurerm_role_assignment" "assign_contributor_appgw_rg" {
   principal_id         = data.azurerm_user_assigned_identity.auto_created_agic_mi.principal_id
 }
 
-module "ai_search" {
-  source                       = "./modules/ai_search"
+# module "ai_search" {
+#   source                       = "./modules/ai_search"
   
-  name = var.name_prefix == null ? "${random_string.prefix.result}${var.vnet_name}" : "${var.name_prefix}-${var.ai_search_name}"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = var.location
-  sku                 = var.sku
-  replica_count       = var.replica_count
-  partition_count     = var.partition_count
-}
+#   name = var.name_prefix == null ? "${random_string.prefix.result}${var.vnet_name}" : "${var.name_prefix}-${var.ai_search_name}"
+#   resource_group_name = azurerm_resource_group.rg.name
+#   location            = var.location
+#   sku                 = var.sku
+#   replica_count       = var.replica_count
+#   partition_count     = var.partition_count
+# }
