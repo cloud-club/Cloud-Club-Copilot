@@ -33,11 +33,16 @@
 ### 로컬에서 앱 실행하기
 
 1. `.env` 파일 만들기
-2. `app/start-dev.sh` 실행
+2. 가상환경 `venv` 만들기
+3. `app/start-dev.sh` 실행
 
   ```bash
+  virtualenv venv # python3.10 으로!
+
   cd app
-  source start.sh
+
+  source venv/bin/activate
+  source start-dev.sh
   ```
 
 3. `http://localhost:50505` 로 접속

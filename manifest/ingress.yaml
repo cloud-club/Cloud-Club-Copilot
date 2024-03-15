@@ -3,8 +3,9 @@ kind: Ingress
 metadata:
   name: chatbot-app-ingress
   annotations:
-    appgw.ingress.kubernetes.io/use-private-ip: "true"
+    kubernetes.io/ingress.class: azure/application-gateway
 spec:
+  ingressClassName: azure-application-gateway
   rules:
   - http:
       paths:

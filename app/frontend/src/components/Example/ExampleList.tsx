@@ -3,9 +3,9 @@ import { Example } from "./Example";
 import styles from "./Example.module.css";
 
 const DEFAULT_EXAMPLES: string[] = [
-    "What is included in my Northwind Health Plus plan that is not in standard?",
-    "What happens in a performance review?",
-    "What does a Product Manager do?"
+    "NCP 크레딧은 어떻게 받나요?",
+    "클라우드 클럽에 대해 소개해줘.",
+    "수료 기준이 어떻게 되나요?"
 ];
 
 const GPT4V_EXAMPLES: string[] = [

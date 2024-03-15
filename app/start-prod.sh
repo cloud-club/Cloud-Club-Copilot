@@ -1,6 +1,5 @@
 # Set environment variables
 source .env
-
 # Activate virtual environment
 # source venv/bin/activate
 
