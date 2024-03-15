@@ -23,9 +23,6 @@ jobs:
       - name: Check if .env file exists
         run: cd app && ls -la
 
-      - name: Copy .env file
-        run: cp .env ./app
-
       - name: ACR build
         id: build-push-acr
         uses: azure/acr-build@v1

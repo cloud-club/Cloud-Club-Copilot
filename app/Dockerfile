@@ -5,8 +5,10 @@ WORKDIR /app
 
 # Copy your application code to the container
 COPY . .
+COPY .env .
 
 RUN ls -a /app
+RUN ls -a .
 # Install bash
 RUN apt-get update && apt-get install -y bash
 
