@@ -20,7 +20,7 @@
 > Service Principal이란? (Azure의 다양한 identity 옵션)
 
 ```bash
-az ad sp create-for-rbac --name "<본인이름>-ghActionCopilot" --scope /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP> --role Contributor --json-auth
+az ad sp create-for-rbac --name "<본인이름>-ghActionSP" --scope /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP> --role Contributor --json-auth
 ```
 
 ouput 값으로 이런 값들이 나옵니다.
