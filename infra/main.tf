@@ -54,13 +54,6 @@ module "virtual_network" {
       delegation: null
     },
     {
-      name : var.user_node_pool_subnet_name
-      address_prefixes : var.user_node_pool_subnet_address_prefix
-      private_endpoint_network_policies_enabled : true
-      private_link_service_network_policies_enabled : false
-      delegation: null
-    },
-    {
       name : var.pod_subnet_name
       address_prefixes : var.pod_subnet_address_prefix
       private_endpoint_network_policies_enabled : true
@@ -82,34 +75,9 @@ module "virtual_network" {
       delegation: null
       
     }
-    # {
-    #   name : var.vm_subnet_name
-    #   address_prefixes : var.vm_subnet_address_prefix
-    #   private_endpoint_network_policies_enabled : true
-    #   private_link_service_network_policies_enabled : false
-    #   delegation: null
-    # },
-    # {
-    #   name : "AzureBastionSubnet"
-    #   address_prefixes : var.bastion_subnet_address_prefix
-    #   private_endpoint_network_policies_enabled : true
-    #   private_link_service_network_policies_enabled : false
-    #   delegation: null
-    # }
   ]
 }
 
-# module "nat_gateway" {
-#   source                       = "./modules/nat_gateway"
-#   name                         = var.name_prefix == null ? "${random_string.prefix.result}${var.nat_gateway_name}" : "${var.name_prefix}-${var.nat_gateway_name}"
-#   resource_group_name          = azurerm_resource_group.rg.name
-#   location                     = var.location
-#   sku_name                     = var.nat_gateway_sku_name
-#   idle_timeout_in_minutes      = var.nat_gateway_idle_timeout_in_minutes
-#   zones                        = var.nat_gateway_zones
-#   tags                         = var.tags
-#   subnet_ids                   = module.virtual_network.subnet_ids
-# }
 
 module "container_registry" {
   source                       = "./modules/container_registry"
@@ -181,30 +149,30 @@ module "aks_cluster" {
   ]
 }
 
-module "node_pool" {
-  source = "./modules/node_pool"
-  resource_group_name = azurerm_resource_group.rg.name
-  kubernetes_cluster_id = module.aks_cluster.id
-  name                         = var.user_node_pool_name
-  vm_size                      = var.user_node_pool_vm_size
-  mode                         = var.user_node_pool_mode
-  node_labels                  = var.user_node_pool_node_labels
-  //node_taints                  = var.user_node_pool_node_taints
-  availability_zones           = var.user_node_pool_availability_zones
-  vnet_subnet_id               = module.virtual_network.subnet_ids[var.user_node_pool_subnet_name]
-  pod_subnet_id                = module.virtual_network.subnet_ids[var.pod_subnet_name]
-  enable_auto_scaling          = var.user_node_pool_enable_auto_scaling
-  enable_host_encryption       = var.user_node_pool_enable_host_encryption
-  enable_node_public_ip        = var.user_node_pool_enable_node_public_ip
-  orchestrator_version         = var.kubernetes_version
-  max_pods                     = var.user_node_pool_max_pods
-  max_count                    = var.user_node_pool_max_count
-  min_count                    = var.user_node_pool_min_count
-  node_count                   = var.user_node_pool_node_count
-  os_type                      = var.user_node_pool_os_type
-  priority                     = var.user_node_pool_priority
-  tags                         = var.tags
-}
+# module "node_pool" {
+#   source = "./modules/node_pool"
+#   resource_group_name = azurerm_resource_group.rg.name
+#   kubernetes_cluster_id = module.aks_cluster.id
+#   name                         = var.user_node_pool_name
+#   vm_size                      = var.user_node_pool_vm_size
+#   mode                         = var.user_node_pool_mode
+#   node_labels                  = var.user_node_pool_node_labels
+#   //node_taints                  = var.user_node_pool_node_taints
+#   availability_zones           = var.user_node_pool_availability_zones
+#   vnet_subnet_id               = module.virtual_network.subnet_ids[var.user_node_pool_subnet_name]
+#   pod_subnet_id                = module.virtual_network.subnet_ids[var.pod_subnet_name]
+#   enable_auto_scaling          = var.user_node_pool_enable_auto_scaling
+#   enable_host_encryption       = var.user_node_pool_enable_host_encryption
+#   enable_node_public_ip        = var.user_node_pool_enable_node_public_ip
+#   orchestrator_version         = var.kubernetes_version
+#   max_pods                     = var.user_node_pool_max_pods
+#   max_count                    = var.user_node_pool_max_count
+#   min_count                    = var.user_node_pool_min_count
+#   node_count                   = var.user_node_pool_node_count
+#   os_type                      = var.user_node_pool_os_type
+#   priority                     = var.user_node_pool_priority
+#   tags                         = var.tags
+# }
 
 # module "openai" {
 #   source                                   = "./modules/openai"

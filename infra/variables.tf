@@ -1,7 +1,7 @@
 variable "name_prefix" {
   description = "(Optional) A prefix for the name of all the resource groups and resources."
   type        = string
-  default     = "test05"
+  default     = "test06"
 }
 
 variable "log_analytics_workspace_name" {
@@ -87,17 +87,6 @@ variable "pod_subnet_address_prefix" {
   type        = list(string)
 }
 
-# variable "vm_subnet_name" {
-#   description = "Specifies the name of the jumpbox subnet"
-#   default     = "VmSubnet"
-#   type        = string
-# }
-
-# variable "vm_subnet_address_prefix" {
-#   description = "Specifies the address prefix of the jumbox subnet"
-#   default     = ["10.243.1.0/24"]
-#   type        = list(string)
-# }
 
 variable "private_endpoint_subnet_name" {
   description = "Specifies the name of the firewall subnet"
@@ -177,7 +166,7 @@ variable "system_node_pool_vm_size" {
 
 variable "system_node_pool_availability_zones" {
   description = "Specifies the availability zones of the system node pool"
-  default     = ["1", "2"]
+  default     = ["1"]
   type        = list(string)
 }
 
@@ -280,7 +269,7 @@ variable "user_node_pool_vm_size" {
 variable "user_node_pool_availability_zones" {
   description = "(Optional) A list of Availability Zones where the Nodes in this Node Pool should be created in. Changing this forces a new resource to be created."
   type        = list(string)
-  default = ["1", "2"]
+  default = ["1"]
 }
 
 variable "user_node_pool_enable_auto_scaling" {
@@ -715,36 +704,6 @@ variable "service_account_name" {
   type = string
   default = "magic8ball-sa"
 }
-
-# variable "email" {
-#   description = "Specifies the email address for the cert-manager cluster issuer."
-#   type = string
-#   default = "paolos@microsoft.com"
-# }
-
-# variable "deployment_script_name" {
-#   description = "(Required) Specifies the name of the Azure OpenAI Service"
-#   type = string
-#   default = "BashScript"
-# }
-
-# variable "deployment_script_azure_cli_version" {
-#   description = "(Required) Azure CLI module version to be used."
-#   type = string
-#   default = "2.9.1"
-# }
-
-# variable "deployment_script_managed_identity_name" {
-#   description = "Specifies the name of the user-defined managed identity used by the deployment script."
-#   type = string
-#   default = "ScriptManagedIdentity"
-# }
-
-# variable "deployment_script_primary_script_uri" {
-#   description = "(Optional) Uri for the script. This is the entry point for the external script. Changing this forces a new Resource Deployment Script to be created."
-#   type = string
-#   default = "https://paolosalvatori.blob.core.windows.net/scripts/install-nginx-via-helm-and-create-sa.sh"
-# }
 
 variable "appgw_pip" {
   description = "value of the public ip address of the application gateway"
