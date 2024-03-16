@@ -1,7 +1,7 @@
 variable "name_prefix" {
   description = "(Optional) A prefix for the name of all the resource groups and resources."
   type        = string
-  default     = "test06"
+  default     = "cloudclub"
 }
 
 variable "log_analytics_workspace_name" {
