@@ -1,5 +1,15 @@
 # Cloud-Club-Copilot
 
+- [Cloud-Club-Copilot](#cloud-club-copilot)
+  - [사전 준비](#사전-준비)
+  - [아키텍처 \& 시나리오 소개](#아키텍처--시나리오-소개)
+    - [아키텍처](#아키텍처)
+    - [시나리오](#시나리오)
+  - [Quick Start](#quick-start)
+    - [로컬에서 앱 실행하기](#로컬에서-앱-실행하기)
+  - [실습 시작](#실습-시작)
+  - [주의 사항](#주의-사항)
+
 클클 5기 핸즈온을 위한 Azure로 클클 전용 코파일럿 만들기
 
 ## 사전 준비
@@ -9,7 +19,6 @@
   ➡️ [링크](https://azure.microsoft.com/ko-kr/free/students/) 
   - 직장인 도비들은 Azure Free 계정을 만들어서 한 달짜리 크레딧을 사용합시다. 
   ➡️ [링크](https://azure.microsoft.com/ko-kr/free/)
-- 이미 학생 크레딧이나 Free 크레딧도 다 썼다고 조사 완료 하신 분들은 신청하실 때 작성한 이메일로 온 초대장으로 제 구독을 사용합니다.
 
 ## 아키텍처 & 시나리오 소개
 
@@ -20,6 +29,8 @@
 ### 시나리오
 
 - 목표: 클라우드 클럽 5기의 노션 데이터를 활용해서 클클 GPT 만들기
+- ![start-page](docs/images/Screenshot%202024-03-17%20at%201.52.27 PM.png)
+- ![end-page](docs/images/Screenshot%202024-03-17%20at%201.51.21 PM.png)
 
 ## Quick Start
 
@@ -50,4 +61,9 @@
 ## 실습 시작
 
 실습은 `docs` 폴더에 있는 문서를 참고해주세요.
-[🚀 시작하기 🚀](docs/01-intro.md)
+[🚀 시작하기 🚀](docs/00-get-ready.md)
+
+## 주의 사항
+
+> [!Note]
+> `main` 브랜치는 클클 5기 핸즈온 행사를 위해 만들어져 있습니다. 해당 행사 시에는 Azure OpenAI, AI Search, Storage Account/Blob 을 핸즈온 참가자들이 배포하지 않았습니다. 만약 이 레포를 보고 핸즈온을 따라한다면 `with-aoai` 브랜치를 사용하여 리소스를 배포해주세요. 해당 브랜치에는 GPT 관련 리소스들도 모두 배포할 수 있게 구성되어 있습니다.
