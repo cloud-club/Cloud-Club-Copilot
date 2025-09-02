@@ -67,3 +67,5 @@
 
 > [!Note]
 > `main` 브랜치는 클클 5기 핸즈온 행사를 위해 만들어져 있습니다. 해당 행사 시에는 Azure OpenAI, AI Search, Storage Account/Blob 을 핸즈온 참가자들이 배포하지 않았습니다. 만약 이 레포를 보고 핸즈온을 따라한다면 `with-aoai` 브랜치를 사용하여 리소스를 배포해주세요. 해당 브랜치에는 GPT 관련 리소스들도 모두 배포할 수 있게 구성되어 있습니다.
+
+<!-- Security scan triggered at 2025-09-02 16:16:48 -->
